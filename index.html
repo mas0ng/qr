@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .disabled-banner {
+            background-color: #ffcccc;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+        }
+        .disabled-text {
+            font-size: 14px;
+        }
+        #countdown {
+            font-size: 14px;
+        }
+        #ref {
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="disabled-banner">
+    <p>QR code has been temporarily disabled</p>
+    <p class="disabled-text">Disabled until: <span id="disabled-until"></span></p>
+    <p id="countdown"></p>
+</div>
+
+<div id="ref"></div>
+
+<script>
+    // Function to parse URL parameters
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    // Function to check if QR code is active
+    function checkQRStatus() {
+        var refNumber = getParameterByName('ref');
+        if (!refNumber) {
+            window.location.href = "https://qr.mas0ng.com/404";
+            return;
+        }
+
+        // Assume qrList is your list fetched from a separate file or database
+        var qrList = {
+            "123": {"status": "active", "url": "https://example.com/active-url"},
+            "456": {"status": "2024-05-06 12:00:00", "url": "https://example.com/future-url"},
+            // Add more entries as needed
+        };
+
+        if (qrList.hasOwnProperty(refNumber)) {
+            var status = qrList[refNumber].status;
+            var url = qrList[refNumber].url;
+
+            if (status === "active" || Date.now() > new Date(status).getTime()) {
+                window.location.href = url;
+            } else {
+                var disabledUntil = new Date(status).toLocaleString();
+                document.getElementById("disabled-until").textContent = disabledUntil;
+                var countdown = new Date(status).getTime() - Date.now();
+                var countdownTimer = setInterval(function() {
+                    var hours = Math.floor((countdown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((countdown % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((countdown % (1000 * 60)) / 1000);
+
+                    document.getElementById("countdown").innerHTML = "Time left: " + hours + "h "
+                        + minutes + "m " + seconds + "s ";
+
+                    if (countdown < 0) {
+                        clearInterval(countdownTimer);
+                        document.getElementById("countdown").innerHTML = "Expired";
+                    }
+
+                    countdown -= 1000;
+                }, 1000);
+            }
+        } else {
+            window.location.href = "https://qr.mas0ng.com/404";
+        }
+    }
+
+    window.onload = function() {
+        checkQRStatus();
+    };
+</script>
+
+</body>
+</html>
