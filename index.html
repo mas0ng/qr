@@ -73,16 +73,11 @@
             return;
         }
 
-        // Assume qrList is fetched from qrlist.txt
+        // Assume qrList is your list fetched from a separate file or database
         var qrList = {
-            <?php
-                $file = file_get_contents("qrlist.txt");
-                $lines = explode("\n", $file);
-                foreach($lines as $line) {
-                    $parts = explode(",", $line);
-                    echo '"' . trim($parts[0]) . '": {"status": "' . trim($parts[1]) . '", "url": "' . trim($parts[2]) . '"},' . "\n";
-                }
-            ?>
+            "123": {"status": "active", "url": "https://example.com/active-url"},
+            "456": {"status": "2024-05-06 12:00:00", "url": "https://example.com/future-url"},
+            // Add more entries as needed
         };
 
         if (qrList.hasOwnProperty(refNumber)) {
