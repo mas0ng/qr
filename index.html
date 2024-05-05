@@ -15,6 +15,7 @@
             padding: 10px;
             text-align: center;
             width: 100%;
+            display: none; /* Initially hide */
         }
         .disabled-text {
             font-size: 14px;
@@ -25,18 +26,32 @@
         #ref {
             text-align: center;
             font-size: 14px;
+            margin-top: 20px; /* Add some space */
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #f0f0f0;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
 
-<div class="disabled-banner">
+<div class="disabled-banner" id="disabled-banner">
     <p>QR code has been temporarily disabled</p>
     <p class="disabled-text">Disabled until: <span id="disabled-until"></span></p>
     <p id="countdown"></p>
 </div>
 
-<div id="ref"></div>
+<div id="ref">Please wait...</div>
+
+<footer>
+    Ref Number: <span id="ref-code"></span>
+</footer>
 
 <script>
     // Function to parse URL parameters
@@ -90,10 +105,17 @@
 
                     countdown -= 1000;
                 }, 1000);
+
+                // Show the disabled banner
+                document.getElementById("ref").style.display = "none";
+                document.getElementById("disabled-banner").style.display = "block";
             }
         } else {
             window.location.href = "https://qr.mas0ng.com/404";
         }
+
+        // Set reference code in the footer
+        document.getElementById("ref-code").textContent = refNumber;
     }
 
     window.onload = function() {
