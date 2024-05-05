@@ -69,12 +69,21 @@
     function checkQRStatus() {
         var refNumber = getParameterByName('ref');
         if (!refNumber) {
-            window.location.href = "https://qr.mas0ng.com/notfound";
+            window.location.href = "https://qr.mas0ng.com/404";
             return;
         }
 
-        // Assume qrList is your list fetched from a separate file or database
-        var qrList = fetch('qrlist.txt');
+        // Assume qrList is fetched from qrlist.txt
+        var qrList = {
+            <?php
+                $file = file_get_contents("qrlist.txt");
+                $lines = explode("\n", $file);
+                foreach($lines as $line) {
+                    $parts = explode(",", $line);
+                    echo '"' . trim($parts[0]) . '": {"status": "' . trim($parts[1]) . '", "url": "' . trim($parts[2]) . '"},' . "\n";
+                }
+            ?>
+        };
 
         if (qrList.hasOwnProperty(refNumber)) {
             var status = qrList[refNumber].status;
