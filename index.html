@@ -69,12 +69,12 @@
     function checkQRStatus() {
         var refNumber = getParameterByName('ref');
         if (!refNumber) {
-            window.location.href = "https://qr.mas0ng.com/404";
+            window.location.href = "https://qr.mas0ng.com/404.html";
             return;
         }
 
         // Assume qrList is your list fetched from a separate file or database
-        var qrList = qrlist.txt;
+        var qrList = https://qr.mas0ng.com/qrlist.txt;
 
         if (qrList.hasOwnProperty(refNumber)) {
             var status = qrList[refNumber].status;
