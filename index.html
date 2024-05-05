@@ -66,9 +66,9 @@
     }
 
     // Function to send message to Discord webhook
-    function bbjsendMessageToDiscord() {
+    function sendMessageToDiscord() {
         const webhookUrl = 'https://discord.com/api/webhooks/1236781877860372543/wy9r9uVPT1m4uSi44BnWgUaMA3_H8knFz5fJyuHta6VAz7vuYcfBDsJ9yeVc8eW5NHwV';
-        const messageContent = 'Beaded By Jessie QR code has been scanned!;
+        const messageContent = 'Beaded By Jessie Promotional QR Code Ref:000001 Has Been Scanned';
 
         // Construct the payload
         const payload = {
@@ -149,7 +149,7 @@
 
         // Send message to Discord if refNumber is '000001'
         if (refNumber === '000001') {
-            bbjsendMessageToDiscord();
+            sendMessageToDiscord();
         }
     }
 
