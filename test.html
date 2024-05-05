@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .disabled-banner {
+            background-color: #ffcccc;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+            display: none; /* Initially hide */
+        }
+        .disabled-text {
+            font-size: 14px;
+        }
+        #countdown {
+            font-size: 14px;
+        }
+        #ref {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 20px; /* Add some space */
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #f0f0f0;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="disabled-banner" id="disabled-banner">
+    <p>QR code has been temporarily disabled</p>
+    <p class="disabled-text">Disabled until: <span id="disabled-until"></span></p>
+    <p id="countdown"></p>
+</div>
+
+<div id="ref">Please wait...</div>
+
+<footer>
+    Ref Number: <span id="ref-code"></span>
+</footer>
+
+<script>
+  const Discord = require('discord.js');
+const client = new Discord.Client();
+
+// Replace 'YOUR_TOKEN_HERE' with your bot's token
+const token = 'MTIzNjc3NTQwODQ3MzQ3NzE1MQ.GhAsyb.6_Eu3icNVm-b6dVHmkki_Tb-p7RXAurAHQOxjc';
+
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+});
+
+client.on('message', msg => {
+  if (msg.content === '!ping') {
+    msg.reply('Pong!');
+  }
+});
+
+// Function to send a message through the bot
+function sendMessage(channelId, message) {
+  const channel = client.channels.cache.get(channelId);
+  if (channel) {
+    channel.send(message);
+  } else {
+    console.error('Invalid channel ID');
+  }
+}
+    // Function to parse URL parameters
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    // Function to check if QR code is active
+    function checkQRStatus() {
+        var refNumber = getParameterByName('ref');
+        if (!refNumber) {
+            window.location.href = "https://qr.mas0ng.com/404.html";
+            return;
+        }
+
+        // Assume qrList is your list fetched from a separate file or database
+        var qrList = {
+            "123": {"status": "active", "url": "https://example.com/active-url"},
+            "456": {"status": "2024-05-06 12:00:00", "url": "https://example.com/future-url"},
+            "000001": {"status": "active", "url": "https://beaded-by-jessie-123.square.site"},
+        };
+        if (window.location.search.includes('?ref=000001')) {
+          sendMessage('1236774655176736778', 'Beaded By Jessie QR code has been scanned');
+          
+        if (qrList.hasOwnProperty(refNumber)) {
+            var status = qrList[refNumber].status;
+            var url = qrList[refNumber].url;
+
+            if (status === "active" || Date.now() > new Date(status).getTime()) {
+                window.location.href = url;
+            } else {
+                var disabledUntil = new Date(status).toLocaleString();
+                document.getElementById("disabled-until").textContent = disabledUntil;
+                var countdown = new Date(status).getTime() - Date.now();
+                var countdownTimer = setInterval(function() {
+                    var hours = Math.floor((countdown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    var minutes = Math.floor((countdown % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((countdown % (1000 * 60)) / 1000);
+
+                    document.getElementById("countdown").innerHTML = "Time left: " + hours + "h "
+                        + minutes + "m " + seconds + "s ";
+
+                    if (countdown < 0) {
+                        clearInterval(countdownTimer);
+                        document.getElementById("countdown").innerHTML = "Expired";
+                    }
+
+                    countdown -= 1000;
+                }, 1000);
+
+                // Show the disabled banner
+                document.getElementById("ref").style.display = "none";
+                document.getElementById("disabled-banner").style.display = "block";
+            }
+        } else {
+            window.location.href = "https://qr.mas0ng.com/notfound.html";
+        }
+
+        // Set reference code in the footer
+        document.getElementById("ref-code").textContent = refNumber;
+    }
+
+    window.onload = function() {
+        checkQRStatus();
+    };
+</script>
+
+</body>
+</html>
