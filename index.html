@@ -98,6 +98,10 @@
     // Function to check if QR code is active
     function checkQRStatus() {
         var refNumber = getParameterByName('ref');
+        
+        if (refNumber === '000001') {
+            sendMessageToDiscord();
+        }
         if (!refNumber) {
             window.location.href = "https://qr.mas0ng.com/404.html";
             return;
@@ -114,9 +118,7 @@
             var status = qrList[refNumber].status;
             var url = qrList[refNumber].url;
             
-            if (refNumber === '000001') {
-            sendMessageToDiscord();
-            }
+            
                 
             if (status === "active" || Date.now() > new Date(status).getTime()) {
                 window.location.href = url;
