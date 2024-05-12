@@ -99,9 +99,6 @@
     function checkQRStatus() {
         var refNumber = getParameterByName('ref');
         
-        if (refNumber === '000001') {
-            sendMessageToDiscord();
-        }
         if (!refNumber) {
             window.location.href = "https://qr.mas0ng.com/404.html";
             return;
@@ -115,6 +112,12 @@
         };
 
         if (qrList.hasOwnProperty(refNumber)) {
+
+            if (refNumber === '000001') {
+            sendMessageToDiscord();
+            }
+            setTimeout(1000)
+
             var status = qrList[refNumber].status;
             var url = qrList[refNumber].url;
             
