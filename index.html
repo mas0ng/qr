@@ -113,7 +113,11 @@
         if (qrList.hasOwnProperty(refNumber)) {
             var status = qrList[refNumber].status;
             var url = qrList[refNumber].url;
-
+            
+            if (refNumber === '000001') {
+            sendMessageToDiscord();
+            }
+                
             if (status === "active" || Date.now() > new Date(status).getTime()) {
                 window.location.href = url;
             } else {
@@ -148,9 +152,8 @@
         document.getElementById("ref-code").textContent = refNumber;
 
         // Send message to Discord if refNumber is '000001'
-        if (refNumber === '000001') {
-            sendMessageToDiscord();
-        }
+        
+        
     }
 
     window.onload = function() {
